@@ -7,8 +7,9 @@ class Genero(Enum):
     NB = "e"
 
 # VARIABLES GLOBALES ----------------------------------------------------------------------------------------
+MAX_INTENTOS = 3
 vacio = ["", " "]
-dict_cuentas_existentes = {'vicente@eni.es':['Vicente', Genero.M], 
+dict_cuentas_activas = {'vicente@eni.es':['Vicente', Genero.M], 
                            'julia@telefonica.es':['Julia', Genero.F], 
                            'alex@gmail.com':['Alex', Genero.NB] }
 
@@ -44,7 +45,7 @@ def formato_correcto(entrada):
 
 def correo_asociado_a_cuenta(entrada):
     '''Función para verificaar si el correo introducido está asociado a alguna cuenta activa o no.'''
-    if entrada not in dict_cuentas_existentes:
+    if entrada not in dict_cuentas_activas:
         raise ValueError("Este correo no está asociado a ninguna cuenta.")
     else:
         return entrada
@@ -54,7 +55,7 @@ def main():
     '''Función que modeliza el ejercicio'''
     intentos = 0
     while True:
-        if intentos <=2: # si se han realizado más de 2 intentos fallidos, se bloquea
+        if intentos < MAX_INTENTOS: 
             entrada = pedir_entrada()
             intentos += 1
             try:
@@ -65,11 +66,11 @@ def main():
                 print(e)
                 continue
             else: # si no hay error, se accede
-                terminacion_genero = dict_cuentas_existentes[entrada_correo][1].value
-                nombre_usuario = dict_cuentas_existentes[entrada_correo][0]
+                terminacion_genero = dict_cuentas_activas[entrada_correo][1].value
+                nombre_usuario = dict_cuentas_activas[entrada_correo][0]
                 print( f"¡Bienvenid{terminacion_genero}, {nombre_usuario}!")
                 break
-        else:
+        else: # si se han agotado los intentos, se bloquea la cuenta
             print('Cuenta bloqueada. Demasiados intentos fallidos.')
             break
     # si hemos salido del bucle, es porque el correo es válido
